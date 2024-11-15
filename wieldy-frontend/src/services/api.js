@@ -1,8 +1,7 @@
 import axios from "axios";
-require("dotenv").config();
 
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL,
+  baseURL: "https://wieldyportal.co.uk",
 });
 
 API.interceptors.request.use(
