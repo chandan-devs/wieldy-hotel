@@ -1,0 +1,157 @@
+.pre-checkin-container {
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 12px;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.precheckinHeader {
+  display: flex;
+}
+
+.header {
+  width: 100%;
+  padding: 10px 55px 0 0;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+.main-content {
+  padding: 0 4px;
+}
+
+.main-content h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.id-upload-section {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.upload-card {
+  flex: 1;
+  background-color: #f0f3ff;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.upload-card:hover {
+  background-color: #e6ebff;
+}
+
+.upload-title {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+}
+
+.upload-subtitle {
+  font-size: 12px;
+  color: #4361ee;
+  text-align: center;
+  margin: 0;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  background-color: #f0f3ff;
+  font-size: 16px;
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: #666;
+}
+
+.acknowledgment {
+  margin: 24px 0;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}
+
+.checkbox-text {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.accept-link {
+  color: #4361ee;
+  text-decoration: none;
+  font-size: 14px;
+  display: block;
+  margin-top: 8px;
+  margin-left: 32px;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 16px;
+  background-color: #4361ee;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* .submit-button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+} */
+
+.submit-button:hover:not(:disabled) {
+  background-color: #3a54d6;
+}
+
+@media (max-width: 380px) {
+  .id-upload-section {
+    flex-direction: column;
+  }
+
+  .upload-card {
+    padding: 16px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    font-weight: 600;
+  }
+}

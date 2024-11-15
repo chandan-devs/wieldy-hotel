@@ -1,0 +1,141 @@
+.image-card {
+  position: relative;
+  width: 100%;
+  height: 550px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px 24px;
+}
+
+.text-content {
+  color: white;
+}
+
+.text-content h1 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.text-content h2 {
+  font-size: 32px;
+  font-weight: 600;
+  text-align: start;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+  margin-left: 23px;
+  margin-right: 23px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px 12px 48px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.input-group .icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 20px;
+}
+
+.input-group input:focus + .icon {
+  color: #007bff;
+}
+
+.input-group input::placeholder {
+  color: #999;
+}
+
+.form-section {
+  margin-top: 50px;
+}
+
+.verify-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0px 16px;
+  margin-top: 12px;
+}
+
+.otp-inputs {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 24px 0;
+}
+
+.otp-inputs input {
+  width: 60px;
+  height: 60px;
+  border: 1.5px solid #ddd;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 500;
+  color: #333;
+  background-color: transparent;
+}
+
+.otp-inputs input:focus {
+  outline: none;
+  border-color: #4285f4;
+}
+
+.verify-button {
+  width: 100%;
+  padding: 16px;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.verify-button:hover {
+  background-color: #3367d6;
+}
+
+@media (max-width: 768px) {
+  .text-content h1,
+  .text-content h2 {
+    font-size: 28px;
+    text-align: start;
+    color: #fff;
+  }
+
+  .login-container {
+    justify-content: flex-start;
+  }
+}
