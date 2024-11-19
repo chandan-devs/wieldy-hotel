@@ -1,0 +1,152 @@
+.pre-checkin-success__container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pre-checkin-success__header {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.pre-checkin-success__title {
+  text-align: center;
+}
+
+.pre-checkin-success__title h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.pre-checkin-success__card {
+  background-color: #eef1ff;
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  margin-top: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 400px;
+}
+
+.pre-checkin-success__close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.pre-checkin-success__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.pre-checkin-success__check-icon {
+  width: 56px;
+  height: 56px;
+  background-color: #4bde97;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 32px;
+  margin-bottom: 24px;
+}
+
+.pre-checkin-success__heading {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+}
+
+.pre-checkin-success__details {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.pre-checkin-success__note {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.pre-checkin-success__details-button {
+  background-color: #4361ee;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 20px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pre-checkin-success__details-button:hover {
+  background-color: #1d4ed8;
+}
+
+/* For tablet screens */
+@media (max-width: 768px) {
+  .pre-checkin-success__card {
+    max-width: 90%;
+  }
+}
+
+/* For mobile screens */
+@media (max-width: 480px) {
+  .pre-checkin-success__container {
+    padding: 16px;
+  }
+
+  .pre-checkin-success__card {
+    padding: 20px;
+    margin-top: 24px;
+  }
+
+  .pre-checkin-success__title h1 {
+    font-size: 22px;
+  }
+
+  .pre-checkin-success__heading {
+    font-size: 18px;
+  }
+
+  .pre-checkin-success__details,
+  .pre-checkin-success__note {
+    font-size: 14px;
+  }
+
+  .pre-checkin-success__check-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  .pre-checkin-success__details-button {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}

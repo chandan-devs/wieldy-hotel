@@ -1,21 +1,37 @@
-.pre-checkin-container {
+.pre-checkin__container {
   max-width: 430px;
   margin: 0 auto;
   padding: 12px;
   background-color: white;
   min-height: 100vh;
-}
-
-.precheckinHeader {
   display: flex;
+  flex-direction: column;
 }
 
-.header {
+.pre-checkin__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.pre-checkin__preview-image {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.pre-checkin__error-message {
+  color: #ff0000;
+  font-size: 0.8em;
+  margin-top: 5px;
+}
+
+.pre-checkin__title {
   width: 100%;
   padding: 10px 55px 0 0;
 }
 
-.back-button {
+.pre-checkin__back-button {
   background: none;
   border: none;
   padding: 8px;
@@ -23,23 +39,26 @@
   margin-right: 16px;
 }
 
-.main-content {
+.pre-checkin__main-content {
   padding: 0 4px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.main-content h2 {
+.pre-checkin__subtitle {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 24px;
 }
 
-.id-upload-section {
+.pre-checkin__id-upload-section {
   display: flex;
   gap: 16px;
   margin-bottom: 24px;
 }
 
-.upload-card {
+.pre-checkin__upload-card {
   flex: 1;
   background-color: #f0f3ff;
   border-radius: 12px;
@@ -52,28 +71,28 @@
   transition: background-color 0.2s;
 }
 
-.upload-card:hover {
+.pre-checkin__upload-card:hover {
   background-color: #e6ebff;
 }
 
-.upload-title {
+.pre-checkin__upload-title {
   font-size: 14px;
   color: #333;
   margin: 0;
 }
 
-.upload-subtitle {
+.pre-checkin__upload-subtitle {
   font-size: 12px;
   color: #4361ee;
   text-align: center;
   margin: 0;
 }
 
-.form-group {
+.pre-checkin__form-group {
   margin-bottom: 16px;
 }
 
-.form-input {
+.pre-checkin__form-input {
   width: 100%;
   padding: 16px;
   border: none;
@@ -83,34 +102,34 @@
   outline: none;
 }
 
-.form-input::placeholder {
+.pre-checkin__form-input::placeholder {
   color: #666;
 }
 
-.acknowledgment {
+.pre-checkin__acknowledgment {
   margin: 24px 0;
 }
 
-.checkbox-container {
+.pre-checkin__checkbox-container {
   display: flex;
   align-items: flex-start;
   gap: 12px;
   cursor: pointer;
 }
 
-.checkbox-container input[type="checkbox"] {
+.pre-checkin__checkbox-container input[type="checkbox"] {
   width: 20px;
   height: 20px;
   margin-top: 2px;
 }
 
-.checkbox-text {
+.pre-checkin__checkbox-text {
   font-size: 14px;
   color: #333;
   line-height: 1.4;
 }
 
-.accept-link {
+.pre-checkin__accept-link {
   color: #4361ee;
   text-decoration: none;
   font-size: 14px;
@@ -119,7 +138,7 @@
   margin-left: 32px;
 }
 
-.submit-button {
+.pre-checkin__submit-button {
   width: 100%;
   padding: 16px;
   background-color: #4361ee;
@@ -130,27 +149,60 @@
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
+  margin-top: auto;
 }
 
-/* .submit-button:disabled {
-  background-color: #a0aec0;
-  cursor: not-allowed;
-} */
-
-.submit-button:hover:not(:disabled) {
+.pre-checkin__submit-button:hover:not(:disabled) {
   background-color: #3a54d6;
 }
 
+.pre-checkin__date-input-container {
+  position: relative;
+}
+
+.pre-checkin__calendar-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.react-datepicker {
+  font-family: Arial, sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.react-datepicker__header {
+  background-color: #f0f3ff;
+  border-bottom: 1px solid #ccc;
+}
+
+.react-datepicker__day--selected {
+  background-color: #4361ee;
+  color: white;
+}
+
+.react-datepicker__day:hover {
+  background-color: #e6ebff;
+}
+
+.react-datepicker__year-dropdown {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 @media (max-width: 380px) {
-  .id-upload-section {
+  .pre-checkin__id-upload-section {
     flex-direction: column;
   }
 
-  .upload-card {
+  .pre-checkin__upload-card {
     padding: 16px;
   }
 
-  .header h1 {
+  .pre-checkin__title h1 {
     font-size: 22px;
     font-weight: 600;
   }

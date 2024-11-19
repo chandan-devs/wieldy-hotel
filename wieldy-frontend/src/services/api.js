@@ -93,4 +93,19 @@ export const checkIn = async (payload) => {
   }
 };
 
+export const uploadPreCheckInData = async (formData) => {
+  try {
+    const response = await API.post("/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        token: localStorage.getItem("token"), // Assuming you store the token in localStorage
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to upload pre-check-in data:", error);
+    throw error;
+  }
+};
+
 export default API;

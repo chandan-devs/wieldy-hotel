@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import GuestLogin from "./screens/GuestLogin";
 import GuestDashboard from "./screens/GuestDashboard";
 import PreCheckInForm from "./screens/PreCheckInForm";
+import PreCheckInSuccess from "./screens/PreCheckInSuccess";
 import BookingDetails from "./screens/BookingDetails";
 import UnlockingDetails from "./screens/UnlockingDetails";
 import UnlockRoom from "./screens/UnlockRoom";
@@ -17,7 +18,11 @@ function App() {
         <Route path="/" element={<GuestLogin />} />
         <Route path="/dashboard" element={<GuestDashboard />} />
         {/* <Route path="/pre-check-in/:reservationId" element={<PreCheckInForm />} /> */}
-        <Route path="/pre-check-in" element={<PreCheckInForm />} />
+        <Route
+          path="/pre-check-in/:reservationId"
+          element={<PreCheckInForm />}
+        />
+        <Route path="/pre-check-in-success" element={<PreCheckInSuccess />} />
         <Route
           path="/bookingdetails/:reservationId"
           element={<BookingDetails />}

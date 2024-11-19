@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import {
   getHotelReservationById,
   unlockDoor,
@@ -44,7 +45,6 @@ const UnlockRoom = () => {
           setIsUnlocked(true);
           navigate(`/unlock-success/${roomId}`);
         } else {
-          // throw new Error("Unlock failed");
           navigate(`/unlock-failed/${reservationId}/${roomId}`);
         }
       } catch (error) {
@@ -75,7 +75,7 @@ const UnlockRoom = () => {
     <>
       <div className="header">
         <button className="back-button" onClick={() => navigate(-1)}>
-          ←
+          <ArrowLeft />
         </button>
         <h1>Unlock Your Room</h1>
       </div>
@@ -95,7 +95,7 @@ const UnlockRoom = () => {
           {buttonText}
         </button>
 
-        <div className="bottom-navigation">
+        <div className="unlockRoom-bottom-navigation">
           <button onClick={() => navigate("/dashboard")}>
             <img src={home} alt="Home" />
           </button>

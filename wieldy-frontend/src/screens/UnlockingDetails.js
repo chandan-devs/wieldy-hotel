@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
 import {
   getHotelReservationById,
   unlockDoor,
   getPasscode,
   checkIn,
 } from "../services/api";
+import Loading from "../screens/Loading";
 import "../styles/UnlockingDetails.css";
 import hotelImg from "../assets/hotel-checkIn-img.jpg";
 import home from "../assets/navIcons/Home.png";
@@ -19,13 +22,19 @@ const UnlockingDetails = () => {
   const [buttonText, setButtonText] = useState("Tap to Unlock Front Door");
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [checkInMessage, setCheckInMessage] = useState("");
+  const [isDoorKeypad, setIsDoorKeypad] = useState(true);
   const [passcodeProvided, setPasscodeProvided] = useState(false);
   const [canUnlockRooms, setCanUnlockRooms] = useState(false);
   const [frontDoorUnlocked, setFrontDoorUnlocked] = useState(false);
-  const [passcode, setPasscode] = useState(null);
-  // const [message, setMessage] = useState("");
   const { reservationId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state && location.state.canUnlockRooms) {
+      setCanUnlockRooms(true);
+    }
+  }, [location]);
 
   useEffect(() => {
     const fetchReservationData = async () => {
@@ -34,6 +43,7 @@ const UnlockingDetails = () => {
         if (response.success) {
           setReservationData(response.data[0]);
           checkUnlockingTime(response.data[0]);
+          setIsDoorKeypad(response.data[0].hotelDetails.isDoorKeypad);
         }
       } catch (error) {
         console.error("Error fetching reservation data:", error);
@@ -60,7 +70,7 @@ const UnlockingDetails = () => {
     const canUnlock = now >= halfHourBeforeCheckIn && now <= checkOutTime;
     console.log("Can unlock:", canUnlock);
     setCanUnlock(canUnlock);
-    setCanUnlockRooms(canUnlock);
+    // setCanUnlockRooms(canUnlock);
 
     if (!canUnlock) {
       updateUnlockMessage(now, halfHourBeforeCheckIn);
@@ -73,15 +83,12 @@ const UnlockingDetails = () => {
 
     if (daysDiff > 0) {
       setButtonText(`Unlock will be available in ${daysDiff} day(s)`);
-      // setMessage(`Unlock will be available in ${daysDiff} day(s)`);
     } else {
       const minutesDiff = Math.ceil(timeDiff / (1000 * 60));
       if (minutesDiff > 0) {
         setButtonText(`Unlock available in ${minutesDiff} minute(s)`);
-        // setMessage(`Unlock available in ${minutesDiff} minute(s)`);
       } else {
         setButtonText("Unlock available 30 min before check-in");
-        // setMessage("Unlock available 30 min before check-in");
       }
     }
   };
@@ -90,43 +97,47 @@ const UnlockingDetails = () => {
     console.log("Current canUnlock state:", canUnlock);
     console.log("Current isUnlocked state:", isUnlocked);
     if (canUnlock && !isUnlocked) {
-      // setMessage("Attempting to unlock the door...");
       try {
         const token = reservationData.guestDetails.ttLockAccessToken;
-        const room = "2024"; // Fixed room number for front door
+        const room = "2024";
         const response = await unlockDoor(token, room);
 
         if (response.success) {
           setButtonText("Front Door Has Been Unlocked Successfully!");
-          // setMessage("Front Door Has Been Unlocked Successfully!");
+
           setIsUnlocked(true);
           setFrontDoorUnlocked(true);
+          setCanUnlockRooms(true);
         } else {
           throw new Error("Unlock failed");
         }
       } catch (error) {
         console.error("Error unlocking door:", error);
         setButtonText("Failed to unlock. Fetching passcode...");
-        // setMessage("Failed to unlock. Fetching passcode...");
 
-        try {
-          const passcodeResponse = await getPasscode(reservationId, "2024");
-          if (passcodeResponse && passcodeResponse.passcode) {
-            const passcodeMessage = `Unlocking Failed. Try Passcode: ${passcodeResponse.passcode}#`;
-            setButtonText(passcodeMessage);
-            // setMessage(passcodeMessage);
-            setPasscodeProvided(true);
-          } else {
-            throw new Error("Failed to get passcode");
+        if (!isDoorKeypad) {
+          navigate(`/unlock-failed-help-support/${reservationId}`);
+        } else {
+          setButtonText("Failed to unlock. Fetching passcode...");
+
+          try {
+            const passcodeResponse = await getPasscode(reservationId, "2024");
+            if (passcodeResponse && passcodeResponse.passcode) {
+              const passcodeMessage = `Unlocking Failed. Try Passcode: ${passcodeResponse.passcode}#`;
+              setButtonText(passcodeMessage);
+
+              setPasscodeProvided(true);
+              setCanUnlockRooms(true);
+            } else {
+              throw new Error("Failed to get passcode");
+            }
+          } catch (passcodeError) {
+            console.error("Error fetching passcode:", passcodeError);
+            setButtonText("Failed to get passcode. Please try again.");
           }
-        } catch (passcodeError) {
-          console.error("Error fetching passcode:", passcodeError);
-          setButtonText("Failed to get passcode. Please try again.");
-          // setMessage("Failed to get passcode. Please try again.");
         }
       }
     } else if (!canUnlock) {
-      // The message is already set in checkUnlockingTime, so we don't need to do anything here
       console.log("Cannot unlock yet");
     } else {
       console.log("Door is already unlocked");
@@ -134,16 +145,13 @@ const UnlockingDetails = () => {
   };
 
   const handleRoomClick = async (roomId) => {
-    // if (!reservationData || !frontDoorUnlocked) return;
-
     if (!reservationData) return;
 
     const { bookingDetails, hotelDetails } = reservationData;
 
-    // Check if the room can be unlocked
-    if (!hotelDetails.isDoorKeypad && !canUnlockRooms) {
+    if (!canUnlockRooms) {
       setCheckInMessage(
-        "Room unlock is not available yet. Please wait until 30 minutes before check-in time."
+        "Please unlock the front door first before accessing the rooms."
       );
       return;
     }
@@ -172,7 +180,6 @@ const UnlockingDetails = () => {
           setCheckInMessage(response.message);
           navigate(`/unlock-room/${reservationId}/${roomId}`);
         } else {
-          // For any other error messages
           setCheckInMessage(
             response.message ||
               "An error occurred during check-in. Please try again."
@@ -186,7 +193,7 @@ const UnlockingDetails = () => {
   };
 
   if (!reservationData) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const { hotelDetails, bookingDetails } = reservationData;
@@ -204,66 +211,43 @@ const UnlockingDetails = () => {
         <div className="hotel-name">{hotelDetails.propertyName}</div>
       </div>
 
-      {hotelDetails.isDoorKeypad && (
-        <div className="unlockbtn">
-          <button
-            className={`unlock-button-frontdoor ${
-              !canUnlock || isUnlocked ? "disabled" : ""
-            }`}
-            onClick={handleUnlock}
-            disabled={!canUnlock || isUnlocked}
-          >
-            {buttonText}
-          </button>
-          {/* {message && <p className="unlock-message">{message}</p>} */}
-        </div>
-      )}
+      <div className="frontdoor-btn">
+        <h2>Front Door Key:</h2>
+        {hotelDetails.isFrontDoor && (
+          <div className="unlockbtn">
+            <button
+              className={`unlock-button-frontdoor ${
+                !canUnlock || isUnlocked ? "disabled" : ""
+              }`}
+              onClick={handleUnlock}
+              disabled={!canUnlock || isUnlocked}
+            >
+              {buttonText}
+            </button>
+          </div>
+        )}
+      </div>
 
       <div className="room-list">
         <h2>Room List</h2>
-        {/* {bookingDetails.rooms.map((room) => (
-          <button
-            key={room.roomId}
-            className={`room-item ${
-              frontDoorUnlocked || passcodeProvided ? "" : "disabled"
-            }`}
-            onClick={() => handleRoomClick(room.roomId)}
-            disabled={!(frontDoorUnlocked || passcodeProvided)}
-          > */}
         {bookingDetails.rooms.map((room) => (
           <button
             key={room.roomId}
-            className={`room-item ${
-              (hotelDetails.isDoorKeypad &&
-                (frontDoorUnlocked || passcodeProvided)) ||
-              (!hotelDetails.isDoorKeypad && canUnlockRooms)
-                ? ""
-                : "disabled"
-            }`}
+            className={`room-item ${canUnlockRooms ? "" : "disabled"}`}
             onClick={() => handleRoomClick(room.roomId)}
-            disabled={
-              !(
-                (hotelDetails.isDoorKeypad &&
-                  (frontDoorUnlocked || passcodeProvided)) ||
-                (!hotelDetails.isDoorKeypad && canUnlockRooms)
-              )
-            }
+            disabled={!canUnlockRooms}
           >
             <span>Room Number: {room.roomId}</span>
-            <span className="arrow">➔</span>
+            <span className="arrow">
+              <ChevronRight />
+            </span>
           </button>
         ))}
       </div>
 
-      {!hotelDetails.isDoorKeypad && !canUnlockRooms && (
-        <p className="unlock-message">
-          Room unlocking will be available 30 minutes before check-in time.
-        </p>
-      )}
-
       {checkInMessage && <p className="check-in-message">{checkInMessage}</p>}
 
-      <div className="bottom-navigation">
+      <div className="unlocking-bottom-navigation">
         <button onClick={() => navigate("/dashboard")}>
           <img src={home} alt="Home" />
         </button>

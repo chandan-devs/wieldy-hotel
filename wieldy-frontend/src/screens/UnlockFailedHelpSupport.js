@@ -1,42 +1,44 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import "../styles/UnlockSuccess.css";
-import lockIcon from "../assets/unlockSucess.png";
+import "../styles/UnlockRoom.css";
+import lockIcon from "../assets/unlockingFailed.png";
 import home from "../assets/navIcons/Home.png";
 import checkIn from "../assets/navIcons/checkIn.png";
 import key from "../assets/navIcons/key.png";
 import help from "../assets/navIcons/help.png";
 
-const UnlockSuccess = () => {
+const UnlockFailedHelpSupport = () => {
   const navigate = useNavigate();
-  const { roomId } = useParams();
+  const { reservationId } = useParams();
 
+  const handleBackToUnlocking = () => {
+    navigate(`/unlocking-details/${reservationId}`, {
+      state: { canUnlockRooms: true },
+    });
+  };
   return (
     <>
       <div className="header">
-        <button className="back-button" onClick={() => navigate(-1)}>
-          <ArrowLeft />
+        <button className="back-button" onClick={handleBackToUnlocking}>
+          ←
         </button>
-        <h1>Unlock Success</h1>
+        <h1>Unlock Failed</h1>
       </div>
-      <div className="room-number">
-        <span>Room Number: {roomId}</span>
-      </div>
+
       <div className="unlock-room-container">
         <div className="lock-icon">
           <img src={lockIcon} alt="Lock" />
         </div>
 
-        <button className="unlock-button-success unlocked" disabled>
-          Room {roomId} has been unlocked Successfully
+        <button className="unlock-button unlocked" disabled>
+          Unlocking Failed, Connect To Support Team.
         </button>
 
-        <div className="unlockSuccess-bottom-navigation">
+        <div className="bottom-navigation">
           <button onClick={() => navigate("/dashboard")}>
             <img src={home} alt="Home" />
           </button>
-          <button onClick={() => navigate(`/bookingdetails/${roomId}`)}>
+          <button onClick={() => navigate(`/bookingdetails/${reservationId}`)}>
             <img src={checkIn} alt="Check In" />
           </button>
           <button>
@@ -51,4 +53,4 @@ const UnlockSuccess = () => {
   );
 };
 
-export default UnlockSuccess;
+export default UnlockFailedHelpSupport;
