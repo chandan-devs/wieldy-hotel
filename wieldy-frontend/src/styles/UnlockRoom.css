@@ -1,3 +1,7 @@
+.unlock-room {
+  background-color: #fff;
+}
+
 .unlock-room-container {
   display: flex;
   flex-direction: column;
@@ -68,11 +72,11 @@ h1 {
 }
 
 .unlock-button.unlocked {
-  background-color: #4caf50;
+  background-color: #3068fd;
 }
 
 .unlock-button:disabled {
-  opacity: 0.7;
+  /* opacity: 0.7; */
   cursor: not-allowed;
 }
 

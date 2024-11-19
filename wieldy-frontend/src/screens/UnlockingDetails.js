@@ -9,12 +9,9 @@ import {
   checkIn,
 } from "../services/api";
 import Loading from "../screens/Loading";
+import BottomNavigation from "../components/BottomNavigation";
 import "../styles/UnlockingDetails.css";
 import hotelImg from "../assets/hotel-checkIn-img.jpg";
-import home from "../assets/navIcons/Home.png";
-import checkInIcon from "../assets/navIcons/checkIn.png";
-import key from "../assets/navIcons/key.png";
-import help from "../assets/navIcons/help.png";
 
 const UnlockingDetails = () => {
   const [reservationData, setReservationData] = useState(null);
@@ -23,6 +20,7 @@ const UnlockingDetails = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [checkInMessage, setCheckInMessage] = useState("");
   const [isDoorKeypad, setIsDoorKeypad] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [passcodeProvided, setPasscodeProvided] = useState(false);
   const [canUnlockRooms, setCanUnlockRooms] = useState(false);
   const [frontDoorUnlocked, setFrontDoorUnlocked] = useState(false);
@@ -97,6 +95,7 @@ const UnlockingDetails = () => {
     console.log("Current canUnlock state:", canUnlock);
     console.log("Current isUnlocked state:", isUnlocked);
     if (canUnlock && !isUnlocked) {
+      setIsLoading(true);
       try {
         const token = reservationData.guestDetails.ttLockAccessToken;
         const room = "2024";
@@ -136,6 +135,8 @@ const UnlockingDetails = () => {
             setButtonText("Failed to get passcode. Please try again.");
           }
         }
+      } finally {
+        setIsLoading(false);
       }
     } else if (!canUnlock) {
       console.log("Cannot unlock yet");
@@ -149,18 +150,20 @@ const UnlockingDetails = () => {
 
     const { bookingDetails, hotelDetails } = reservationData;
 
-    if (!canUnlockRooms) {
-      setCheckInMessage(
-        "Please unlock the front door first before accessing the rooms."
-      );
-      return;
-    }
+    // if (!canUnlockRooms) {
+    //   setCheckInMessage(
+    //     "Please unlock the front door first before accessing the rooms."
+    //   );
+    //   return;
+    // }
 
     const payload = {
       bookingid: bookingDetails._id,
       reservationid: bookingDetails.reservationId,
       propertyID: hotelDetails.propertyId,
     };
+
+    setIsLoading(true);
 
     try {
       const token = localStorage.getItem("token");
@@ -189,10 +192,12 @@ const UnlockingDetails = () => {
     } catch (error) {
       console.error("Check-in error:", error);
       setCheckInMessage("An error occurred during check-in. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  if (!reservationData) {
+  if (!reservationData || isLoading) {
     return <Loading />;
   }
 
@@ -202,7 +207,7 @@ const UnlockingDetails = () => {
     <div className="container">
       <h1>Unlocking Details</h1>
 
-      <div className="hotel-card">
+      <div className="unlocking-hotel-card">
         <img
           src={hotelDetails.propertyImage || hotelImg}
           alt={hotelDetails.propertyName}
@@ -233,11 +238,14 @@ const UnlockingDetails = () => {
         {bookingDetails.rooms.map((room) => (
           <button
             key={room.roomId}
-            className={`room-item ${canUnlockRooms ? "" : "disabled"}`}
+            className="room-item"
             onClick={() => handleRoomClick(room.roomId)}
-            disabled={!canUnlockRooms}
+
+            // className={`room-item ${canUnlockRooms ? "" : "disabled"}`}
+            // onClick={() => handleRoomClick(room.roomId)}
+            // disabled={!canUnlockRooms}
           >
-            <span>Room Number: {room.roomId}</span>
+            <span className="room-item-text">Room Number: {room.roomId}</span>
             <span className="arrow">
               <ChevronRight />
             </span>
@@ -247,20 +255,7 @@ const UnlockingDetails = () => {
 
       {checkInMessage && <p className="check-in-message">{checkInMessage}</p>}
 
-      <div className="unlocking-bottom-navigation">
-        <button onClick={() => navigate("/dashboard")}>
-          <img src={home} alt="Home" />
-        </button>
-        <button onClick={() => navigate(`/bookingdetails/${reservationId}`)}>
-          <img src={checkInIcon} alt="Check In" />
-        </button>
-        <button>
-          <img src={key} alt="Key" />
-        </button>
-        <button>
-          <img src={help} alt="Help" />
-        </button>
-      </div>
+      <BottomNavigation />
     </div>
   );
 };

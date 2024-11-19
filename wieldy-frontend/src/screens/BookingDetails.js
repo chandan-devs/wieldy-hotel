@@ -4,6 +4,7 @@ import { Calendar, Users, User } from "lucide-react";
 import { getHotelReservationById, getUnlockingDetails } from "../services/api";
 import Loading from "../screens/Loading";
 import "../styles/BookingDetails.css";
+import BottomNavigation from "../components/BottomNavigation";
 import hotelImg from "../assets/hotel-checkIn-img.jpg";
 import home from "../assets/navIcons/Home.png";
 import checkIn from "../assets/navIcons/checkIn.png";
@@ -52,7 +53,7 @@ const BookingDetails = () => {
     <div className="container">
       <h1>Booking Details</h1>
 
-      <div className="hotel-card">
+      <div className="booking-hotel-card">
         <img
           src={hotelDetails.propertyImage || hotelImg}
           alt={hotelDetails.propertyName}
@@ -84,12 +85,15 @@ const BookingDetails = () => {
         </div>
       </div>
       <div className="unlockbtn">
-        <button className="unlock-button" onClick={handleSeeUnlockingDetails}>
+        <button
+          className="booking-unlock-button"
+          onClick={handleSeeUnlockingDetails}
+        >
           See Unlocking Details
         </button>
       </div>
 
-      <div className="booking-bottom-navigation">
+      {/* <div className="booking-bottom-navigation">
         <button onClick={() => navigate("/dashboard")}>
           <img src={home} alt="Home" />
         </button>
@@ -102,7 +106,8 @@ const BookingDetails = () => {
         <button>
           <img src={help} alt="Help" />
         </button>
-      </div>
+      </div> */}
+      <BottomNavigation />
     </div>
   );
 };

@@ -194,6 +194,7 @@ import { useNavigate } from "react-router-dom";
 import { getHotelReservations } from "../services/api";
 import { LogOut, MapPin, Bell } from "lucide-react";
 import Loading from "./Loading";
+import BottomNavigation from "../components/BottomNavigation";
 import hotelImg from "../assets/hotel-checkIn-img.jpg";
 import bodySpaImg from "../assets/body-spa-img.jpg";
 import breakfastImg from "../assets/breakfast-img.jpg";
@@ -233,18 +234,18 @@ function GuestDashboard() {
     navigate("/");
   };
 
-  const handleBookingDetails = () => {
-    if (
-      reservationData &&
-      reservationData.data &&
-      reservationData.data.length > 0
-    ) {
-      const guestId = reservationData.data[0].bookingDetails._id;
-      navigate(`/bookingdetails/${guestId}`);
-    } else {
-      console.error("No reservation data available");
-    }
-  };
+  // const handleBookingDetails = () => {
+  //   if (
+  //     reservationData &&
+  //     reservationData.data &&
+  //     reservationData.data.length > 0
+  //   ) {
+  //     const guestId = reservationData.data[0].bookingDetails._id;
+  //     navigate(`/bookingdetails/${guestId}`);
+  //   } else {
+  //     console.error("No reservation data available");
+  //   }
+  // };
 
   const handlePreCheckIn = () => {
     if (
@@ -272,10 +273,11 @@ function GuestDashboard() {
         onProceedCheckIn={handlePreCheckIn}
       />
       <Picks />
-      <BottomNavigation
+      {/* <BottomNavigation
         onHomeClick={fetchReservationData}
         onBookingDetails={handleBookingDetails}
-      />
+      /> */}
+      <BottomNavigation />
     </div>
   );
 }
@@ -317,7 +319,7 @@ const WelcomeCard = ({ reservationData, onProceedCheckIn }) => {
         <div className="gd-checkin-btn">
           <p>We are waiting to onboard you. Enjoy your stay!</p>
           <button className="gd-checkin-button" onClick={onProceedCheckIn}>
-            Proceed for Check-In
+            Proceed to Pre Check-In
           </button>
         </div>
         <p className="gd-account-name">Wieldy demo account</p>
@@ -360,23 +362,25 @@ const Picks = () => {
   );
 };
 
-const BottomNavigation = ({ onHomeClick, onBookingDetails }) => {
-  return (
-    <div className="gd-bottom-navigation">
-      <button onClick={onHomeClick}>
-        <img src={home} alt="Home" />
-      </button>
-      <button onClick={onBookingDetails}>
-        <img src={checkIn} alt="Check In" />
-      </button>
-      <button>
-        <img src={key} alt="Key" />
-      </button>
-      <button>
-        <img src={help} alt="Help" />
-      </button>
-    </div>
-  );
-};
+// const BottomNavigation = ({ onHomeClick, onBookingDetails }) => {
+//   return (
+//     <div className="gd-bottom-navigation">
+//       <button onClick={onHomeClick}>
+//         <img src={home} alt="Home" />
+//       </button>
+//       <button onClick={onBookingDetails}>
+//         <img src={checkIn} alt="Check In" />
+//       </button>
+//       <button>
+//         <img src={key} alt="Key" />
+//       </button>
+//       <button>
+//         <img src={help} alt="Help" />
+//       </button>
+//     </div>
+//   );
+// };
+
+<BottomNavigation />;
 
 export default GuestDashboard;

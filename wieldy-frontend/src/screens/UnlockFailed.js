@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getPasscode } from "../services/api";
 import "../styles/UnlockRoom.css";
 import lockIcon from "../assets/unlockingFailed.png";
+import BottomNavigation from "../components/BottomNavigation";
+import { ArrowLeft } from "lucide-react";
 import home from "../assets/navIcons/Home.png";
 import checkIn from "../assets/navIcons/checkIn.png";
 import key from "../assets/navIcons/key.png";
@@ -39,10 +41,10 @@ const UnlockFailed = () => {
   }, [reservationId, roomId]);
 
   return (
-    <>
+    <div className="unlock-room">
       <div className="header">
         <button className="back-button" onClick={() => navigate(-1)}>
-          ←
+          <ArrowLeft />
         </button>
         <h1>Unlock Failed</h1>
       </div>
@@ -56,7 +58,7 @@ const UnlockFailed = () => {
         <button className="unlock-button unlocked" disabled>
           {buttonText}
         </button>
-        <div className="bottom-navigation">
+        {/* <div className="bottom-navigation">
           <button onClick={() => navigate("/dashboard")}>
             <img src={home} alt="Home" />
           </button>
@@ -69,9 +71,10 @@ const UnlockFailed = () => {
           <button>
             <img src={help} alt="Help" />
           </button>
-        </div>
+        </div> */}
       </div>
-    </>
+      <BottomNavigation />
+    </div>
   );
 };
 

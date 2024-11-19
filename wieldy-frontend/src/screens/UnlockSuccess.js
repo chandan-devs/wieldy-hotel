@@ -13,7 +13,7 @@ const UnlockSuccess = () => {
   const { roomId } = useParams();
 
   return (
-    <>
+    <div className="unlock-success">
       <div className="header">
         <button className="back-button" onClick={() => navigate(-1)}>
           <ArrowLeft />
@@ -47,7 +47,7 @@ const UnlockSuccess = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

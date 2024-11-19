@@ -1,20 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
 .container {
   padding: 20px;
   background-color: #fff;
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: Poppins;
   position: relative;
   padding-bottom: 80px;
 }
 
 h1 {
+  margin: 5px 0 5px 0;
+  color: #000;
+  font-family: Poppins;
   font-size: 24px;
   font-weight: 600;
-  margin: 20px 0 20px 0;
-  color: #000;
+  line-height: 36px;
 }
 
-.hotel-card {
+.booking-hotel-card {
   position: relative;
   border-radius: 20px;
   overflow: hidden;
@@ -80,7 +84,7 @@ h1 {
   font-weight: 500;
 }
 
-.unlock-button {
+.booking-unlock-button {
   width: 100%;
   background-color: #4361ee;
   color: white;
@@ -100,7 +104,7 @@ h1 {
   align-items: center;
 }
 
-.unlock-button:hover {
+.booking-unlock-button:hover {
   background-color: #1d4ed8;
 }
 
@@ -145,5 +149,11 @@ h1 {
 
   .booking-detail-item {
     font-size: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .booking-hotel-card {
+    height: 200px;
   }
 }

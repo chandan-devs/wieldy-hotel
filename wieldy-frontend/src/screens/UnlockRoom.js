@@ -7,16 +7,15 @@ import {
   // getPasscode,
 } from "../services/api";
 import "../styles/UnlockRoom.css";
+import BottomNavigation from "../components/BottomNavigation";
 import lockIcon from "../assets/unlock.png";
-import home from "../assets/navIcons/Home.png";
-import checkIn from "../assets/navIcons/checkIn.png";
-import key from "../assets/navIcons/key.png";
-import help from "../assets/navIcons/help.png";
+import Loading from "../screens/Loading";
 
 const UnlockRoom = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [reservationData, setReservationData] = useState(null);
   const [buttonText, setButtonText] = useState("Click here to Unlock Now");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { reservationId, roomId } = useParams();
 
@@ -36,6 +35,7 @@ const UnlockRoom = () => {
 
   const handleUnlock = async () => {
     if (!isUnlocked && reservationData) {
+      setIsLoading(true);
       try {
         const token = reservationData.guestDetails.ttLockAccessToken;
         const response = await unlockDoor(token, roomId);
@@ -67,12 +67,18 @@ const UnlockRoom = () => {
         //   console.error("Error fetching passcode:", passcodeError);
         //   setButtonText("Failed to retrieve passcode. Please contact support.");
         // }
+      } finally {
+        setIsLoading(false);
       }
     }
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <>
+    <div className="unlock-room">
       <div className="header">
         <button className="back-button" onClick={() => navigate(-1)}>
           <ArrowLeft />
@@ -95,7 +101,7 @@ const UnlockRoom = () => {
           {buttonText}
         </button>
 
-        <div className="unlockRoom-bottom-navigation">
+        {/* <div className="unlockRoom-bottom-navigation">
           <button onClick={() => navigate("/dashboard")}>
             <img src={home} alt="Home" />
           </button>
@@ -108,9 +114,10 @@ const UnlockRoom = () => {
           <button>
             <img src={help} alt="Help" />
           </button>
-        </div>
+        </div> */}
       </div>
-    </>
+      <BottomNavigation />
+    </div>
   );
 };
 

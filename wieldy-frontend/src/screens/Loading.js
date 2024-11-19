@@ -51,7 +51,7 @@ const Loading = () => {
             style={{
               width: "17px",
               height: "22px",
-              backgroundColor: "#2980B9",
+              backgroundColor: "#fff",
               borderRadius: "50%",
               position: "absolute",
               bottom: "17px",
