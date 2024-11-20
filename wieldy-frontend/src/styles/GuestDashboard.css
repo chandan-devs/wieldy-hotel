@@ -383,7 +383,7 @@
   }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 400px) {
   .gd-welcome-card {
     height: 250px;
   }
@@ -394,7 +394,7 @@
   }
 
   .gd-app-container {
-    gap: 1.75rem;
+    gap: 1.5rem;
   }
 
   .gd-account-name {

@@ -64,7 +64,7 @@ const GuestLogin = () => {
           <div className="guest-input-group">
             <input
               type="text"
-              placeholder="Enter Your Number with Country Code"
+              placeholder="Enter Number with Country Code"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               required
@@ -93,7 +93,7 @@ const GuestLogin = () => {
             </div>
             {error && <p className="error-message">{error}</p>}
             <button className="guest-verify-button" type="submit">
-              LOGIN NOW
+              Login Now
             </button>
           </div>
         </form>

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
 
 .guest-login-container {
   display: flex;
@@ -99,15 +99,18 @@
   padding: 0.75rem;
   font-size: 1rem;
   color: white;
-  background-color: #007bff;
+  background-color: #3068fd;
   border: none;
-  border-radius: 8px;
+  border-radius: 50px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: Poppins;
+  font-weight: 700;
+  line-height: 24px;
 }
 
 .guest-verify-button:hover {
-  background-color: #0056b3;
+  background-color: #3068fd;
 }
 
 .error-message {
@@ -137,5 +140,11 @@
   .guest-form-section form {
     width: 100%;
     max-width: 400px;
+  }
+}
+
+@media (max-width: 380px) {
+  .guest-text-content {
+    font-size: 27px;
   }
 }
