@@ -9,7 +9,7 @@
   padding-bottom: 80px;
 }
 
-h1 {
+.bookingDetailHeading {
   margin: 5px 0 5px 0;
   color: #000;
   font-family: Poppins;
@@ -137,8 +137,8 @@ h1 {
     padding: 0.5rem;
   }
 
-  h1 {
-    font-size: 24px;
+  .bookingDetailHeading {
+    font-size: 21px;
     text-align: center;
     line-height: 36px;
   }

@@ -361,7 +361,9 @@
 
 @media (max-width: 768px) {
   .gd-welcome-content h2 {
-    font-size: 2rem;
+    font-size: 32px;
+    font-family: Poppins;
+    font-weight: 500;
   }
 
   .gd-checkin-button {
@@ -371,6 +373,9 @@
 
   .gd-account-name {
     font-size: 1.25rem;
+    font-family: Poppins;
+    font-weight: 500;
+    line-height: 30px;
   }
 
   .gd-picks h3 {
@@ -399,9 +404,25 @@
 
   .gd-account-name {
     font-size: 1rem;
+    font-family: Poppins;
+    font-weight: 500;
+    line-height: 30px;
   }
 
   .gd-welcome-content h2 {
-    font-size: 1.75rem;
+    font-size: 24px;
+    font-family: Poppins;
+    font-weight: 500;
+  }
+
+  .gd-checkin-btn p {
+    font-family: Poppins;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .gd-checkin-button {
+    padding: 14px;
+    font-size: 14px;
   }
 }

@@ -51,7 +51,7 @@ const BookingDetails = () => {
 
   return (
     <div className="container">
-      <h1>Booking Details</h1>
+      <p className="bookingDetailHeading">Booking Details</p>
 
       <div className="booking-hotel-card">
         <img

@@ -9,7 +9,7 @@
   padding-bottom: 80px;
 }
 
-h1 {
+.UnlockingDetailHeading {
   font-family: Poppins;
   font-size: 24px;
   font-weight: 600;
@@ -106,6 +106,10 @@ h1 {
   background-color: #1d4ed8;
 }
 
+.frontdoor-btn {
+  padding: 0px 10px;
+}
+
 .room-list {
   margin-top: 24px;
   display: flex;
@@ -113,7 +117,7 @@ h1 {
   justify-content: center;
   width: 100%;
   gap: 24px;
-  padding: 0 30px;
+  padding: 0px 10px;
 }
 
 .room-item {
@@ -182,8 +186,8 @@ h1 {
     padding: 0.5rem;
   }
 
-  h1 {
-    font-size: 24px;
+  .UnlockingDetailHeading {
+    font-size: 21px;
     text-align: center;
     line-height: 36px;
   }

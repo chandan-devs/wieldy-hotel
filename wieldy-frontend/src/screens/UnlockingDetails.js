@@ -205,7 +205,7 @@ const UnlockingDetails = () => {
 
   return (
     <div className="container">
-      <h1>Unlocking Details</h1>
+      <p className="UnlockingDetailHeading">Unlocking Details</p>
 
       <div className="unlocking-hotel-card">
         <img
@@ -217,7 +217,7 @@ const UnlockingDetails = () => {
       </div>
 
       <div className="frontdoor-btn">
-        <h2>Front Door Key:</h2>
+        <h3>Front Door Key:</h3>
         {hotelDetails.isFrontDoor && (
           <div className="unlockbtn">
             <button
@@ -234,7 +234,7 @@ const UnlockingDetails = () => {
       </div>
 
       <div className="room-list">
-        <h2>Room List</h2>
+        <h3>Room List:</h3>
         {bookingDetails.rooms.map((room) => (
           <button
             key={room.roomId}

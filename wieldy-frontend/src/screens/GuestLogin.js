@@ -64,7 +64,7 @@ const GuestLogin = () => {
           <div className="guest-input-group">
             <input
               type="text"
-              placeholder="Enter Number with Country Code"
+              placeholder="Enter Email/Phone with Country Code"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               required
