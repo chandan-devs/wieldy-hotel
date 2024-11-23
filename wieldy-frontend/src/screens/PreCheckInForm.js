@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { Camera, ArrowLeft, Calendar } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowLeft, Calendar } from "lucide-react";
 import "../styles/PreCheckInForm.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { uploadPreCheckInData } from "../services/api";
@@ -9,42 +9,20 @@ import "react-datepicker/dist/react-datepicker.css";
 const PreCheckin = () => {
   const [legalName, setLegalName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [frontOfIdCard, setFrontOfIdCard] = useState(null);
-  const [backOfIdCard, setBackOfIdCard] = useState(null);
-  const [frontPreview, setFrontPreview] = useState(null);
-  const [backPreview, setBackPreview] = useState(null);
+  const [estimatedArrivalTime, setEstimatedArrivalTime] = useState("");
   const [isAcknowledged, setIsAcknowledged] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showDateOfBirthCalendar, setShowDateOfBirthCalendar] = useState(false);
+  const [showArrivalTimeCalendar, setShowArrivalTimeCalendar] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const { reservationId } = useParams();
-
-  const frontInputRef = useRef(null);
-  const backInputRef = useRef(null);
-
-  const handleImageUpload = (event, side) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (side === "front") {
-          setFrontOfIdCard(file);
-          setFrontPreview(reader.result);
-        } else {
-          setBackOfIdCard(file);
-          setBackPreview(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const validateForm = () => {
     const newErrors = {};
     if (!legalName.trim()) newErrors.legalName = "Legal name is required";
     if (!dateOfBirth) newErrors.dateOfBirth = "Date of birth is required";
-    if (!frontOfIdCard)
-      newErrors.frontOfIdCard = "Front of ID card is required";
+    if (!estimatedArrivalTime)
+      newErrors.estimatedArrivalTime = "Estimated arrival time is required";
     if (!isAcknowledged)
       newErrors.acknowledgment =
         "You must acknowledge the information is true and accurate";
@@ -63,11 +41,8 @@ const PreCheckin = () => {
     const formData = new FormData();
     formData.append("reservationId", reservationId);
     formData.append("legalName", legalName);
-    formData.append("dateOfBirth", dateOfBirth);
-    formData.append("frontOfIdCard", frontOfIdCard);
-    if (backOfIdCard) {
-      formData.append("backOfIdCard", backOfIdCard);
-    }
+    formData.append("dateOfBirth", dateOfBirth.toISOString().split("T")[0]);
+    formData.append("estimatedArrivalTime", estimatedArrivalTime.toISOString());
 
     try {
       const response = await uploadPreCheckInData(formData);
@@ -78,9 +53,14 @@ const PreCheckin = () => {
     }
   };
 
-  const handleDateChange = (date) => {
+  const handleDateOfBirthChange = (date) => {
     setDateOfBirth(date);
-    setShowCalendar(false);
+    setShowDateOfBirthCalendar(false);
+  };
+
+  const handleArrivalTimeChange = (date) => {
+    setEstimatedArrivalTime(date);
+    setShowArrivalTimeCalendar(false);
   };
 
   return (
@@ -100,76 +80,6 @@ const PreCheckin = () => {
         <h2 className="pre-checkin__subtitle">Verify your identity</h2>
 
         <form onSubmit={handleSubmit}>
-          <div className="pre-checkin__id-upload-section">
-            <div
-              className="pre-checkin__upload-card"
-              onClick={() => frontInputRef.current.click()}
-            >
-              {frontPreview ? (
-                <img
-                  src={frontPreview}
-                  alt="Front of ID Card"
-                  className="pre-checkin__preview-image"
-                />
-              ) : (
-                <>
-                  <Camera size={24} color="#4361ee" />
-                  <p className="pre-checkin__upload-title">Front of ID Card</p>
-                  <p className="pre-checkin__upload-subtitle">
-                    (Need your Camera and Gallery Access)
-                  </p>
-                </>
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleImageUpload(e, "front")}
-                ref={frontInputRef}
-                style={{ display: "none" }}
-              />
-              {errors.frontOfIdCard && (
-                <p className="pre-checkin__error-message">
-                  {errors.frontOfIdCard}
-                </p>
-              )}
-            </div>
-
-            <div
-              className="pre-checkin__upload-card"
-              onClick={() => backInputRef.current.click()}
-            >
-              {backPreview ? (
-                <img
-                  src={backPreview}
-                  alt="Back of ID Card"
-                  className="pre-checkin__preview-image"
-                />
-              ) : (
-                <>
-                  <Camera size={24} color="#4361ee" />
-                  <p className="pre-checkin__upload-title">
-                    Back of ID Card (Optional)
-                  </p>
-                  <p className="pre-checkin__upload-subtitle">
-                    (Need your Camera and Gallery Access)
-                  </p>
-                </>
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleImageUpload(e, "back")}
-                ref={backInputRef}
-                style={{ display: "none" }}
-              />
-            </div>
-            {errors.backOfIdCard && (
-              <p className="pre-checkin__error-message">
-                {errors.backOfIdCard}
-              </p>
-            )}
-          </div>
-
           <div className="pre-checkin__form-group">
             <input
               type="text"
@@ -189,20 +99,20 @@ const PreCheckin = () => {
                 type="text"
                 placeholder="Date of birth"
                 value={dateOfBirth ? dateOfBirth.toLocaleDateString() : ""}
-                onClick={() => setShowCalendar(true)}
+                onClick={() => setShowDateOfBirthCalendar(true)}
                 readOnly
                 className="pre-checkin__form-input"
               />
               <Calendar
                 size={24}
                 className="pre-checkin__calendar-icon"
-                onClick={() => setShowCalendar(true)}
+                onClick={() => setShowDateOfBirthCalendar(true)}
               />
             </div>
-            {showCalendar && (
+            {showDateOfBirthCalendar && (
               <DatePicker
                 selected={dateOfBirth}
-                onChange={handleDateChange}
+                onChange={handleDateOfBirthChange}
                 inline
                 maxDate={new Date()}
                 showYearDropdown
@@ -212,6 +122,45 @@ const PreCheckin = () => {
             )}
             {errors.dateOfBirth && (
               <p className="pre-checkin__error-message">{errors.dateOfBirth}</p>
+            )}
+          </div>
+
+          <div className="pre-checkin__form-group">
+            <div className="pre-checkin__date-input-container">
+              <input
+                type="text"
+                placeholder="Estimated arrival time"
+                value={
+                  estimatedArrivalTime
+                    ? estimatedArrivalTime.toLocaleString()
+                    : ""
+                }
+                onClick={() => setShowArrivalTimeCalendar(true)}
+                readOnly
+                className="pre-checkin__form-input"
+              />
+              <Calendar
+                size={24}
+                className="pre-checkin__calendar-icon"
+                onClick={() => setShowArrivalTimeCalendar(true)}
+              />
+            </div>
+            {showArrivalTimeCalendar && (
+              <DatePicker
+                selected={estimatedArrivalTime}
+                onChange={handleArrivalTimeChange}
+                inline
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="MMMM d, yyyy h:mm aa"
+                minDate={new Date()}
+              />
+            )}
+            {errors.estimatedArrivalTime && (
+              <p className="pre-checkin__error-message">
+                {errors.estimatedArrivalTime}
+              </p>
             )}
           </div>
 

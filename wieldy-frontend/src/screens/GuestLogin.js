@@ -69,7 +69,7 @@ const GuestLogin = () => {
               onChange={(e) => setIdentifier(e.target.value)}
               required
             />
-            <span className="material-icons guest-icon">phone_android</span>
+            <span className="material-icons guest-icon">person</span>
           </div>
 
           <div className="guest-verify-container">

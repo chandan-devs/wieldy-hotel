@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL: "https://wieldyportal.co.uk",
+  // baseURL: "http://localhost:8080",
 });
 
 API.interceptors.request.use(
