@@ -177,7 +177,7 @@ const PreCheckin = () => {
               </span>
             </label>
             <Link
-              to="/terms-and-conditions"
+              to="/help-support"
               className="pre-checkin__accept-link"
               target="_blank"
               rel="noopener noreferrer"
