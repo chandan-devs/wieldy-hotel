@@ -5,26 +5,16 @@ import "../styles/UnlockRoom.css";
 import lockIcon from "../assets/unlockingFailed.png";
 import BottomNavigation from "../components/BottomNavigation";
 import { ArrowLeft } from "lucide-react";
-import home from "../assets/navIcons/Home.png";
-import checkIn from "../assets/navIcons/checkIn.png";
-import key from "../assets/navIcons/key.png";
-import help from "../assets/navIcons/help.png";
 
 const UnlockFailed = () => {
-  // const [isUnlocked, setIsUnlocked] = useState(false);
   const [buttonText, setButtonText] = useState("Fetching passcode...");
   const navigate = useNavigate();
-  const { reservationId, roomId } = useParams();
-
-  // const handleUnlock = () => {
-  //   setIsUnlocked(true);
-  //   // Add your unlocking logic here
-  // };
+  const { reservationId, roomName } = useParams();
 
   useEffect(() => {
     const fetchPasscode = async () => {
       try {
-        const passcodeResponse = await getPasscode(reservationId, roomId);
+        const passcodeResponse = await getPasscode(reservationId, roomName);
         if (passcodeResponse && passcodeResponse.passcode) {
           setButtonText(
             `Unlocking Failed. Try Passcode: ${passcodeResponse.passcode}#`
@@ -38,7 +28,7 @@ const UnlockFailed = () => {
       }
     };
     fetchPasscode();
-  }, [reservationId, roomId]);
+  }, [reservationId, roomName]);
 
   return (
     <div className="unlock-room">
@@ -49,7 +39,7 @@ const UnlockFailed = () => {
         <h1>Unlock Failed</h1>
       </div>
       <div className="room-number">
-        <span>Room Number: {roomId}</span>
+        <span>Room Number: {roomName}</span>
       </div>
       <div className="unlock-room-container">
         <div className="lock-icon">
@@ -58,20 +48,6 @@ const UnlockFailed = () => {
         <button className="unlock-button unlocked" disabled>
           {buttonText}
         </button>
-        {/* <div className="bottom-navigation">
-          <button onClick={() => navigate("/dashboard")}>
-            <img src={home} alt="Home" />
-          </button>
-          <button onClick={() => navigate(`/bookingdetails/${reservationId}`)}>
-            <img src={checkIn} alt="Check In" />
-          </button>
-          <button>
-            <img src={key} alt="Key" />
-          </button>
-          <button>
-            <img src={help} alt="Help" />
-          </button>
-        </div> */}
       </div>
       <BottomNavigation />
     </div>

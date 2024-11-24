@@ -3,14 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import "../styles/UnlockSuccess.css";
 import lockIcon from "../assets/unlockSucess.png";
-import home from "../assets/navIcons/Home.png";
-import checkIn from "../assets/navIcons/checkIn.png";
-import key from "../assets/navIcons/key.png";
-import help from "../assets/navIcons/help.png";
+import BottomNavigation from "../components/BottomNavigation";
 
 const UnlockSuccess = () => {
   const navigate = useNavigate();
-  const { roomId } = useParams();
+  const { roomName } = useParams();
 
   return (
     <div className="unlock-success">
@@ -21,7 +18,7 @@ const UnlockSuccess = () => {
         <h1>Unlock Success</h1>
       </div>
       <div className="room-number">
-        <span>Room Number: {roomId}</span>
+        <span>Room Number: {roomName}</span>
       </div>
       <div className="unlock-room-container">
         <div className="lock-icon">
@@ -29,23 +26,10 @@ const UnlockSuccess = () => {
         </div>
 
         <button className="unlock-button-success unlocked" disabled>
-          Room {roomId} has been unlocked Successfully
+          Room {roomName} has been unlocked Successfully
         </button>
 
-        <div className="unlockSuccess-bottom-navigation">
-          <button onClick={() => navigate("/dashboard")}>
-            <img src={home} alt="Home" />
-          </button>
-          <button onClick={() => navigate(`/bookingdetails/${roomId}`)}>
-            <img src={checkIn} alt="Check In" />
-          </button>
-          <button>
-            <img src={key} alt="Key" />
-          </button>
-          <button>
-            <img src={help} alt="Help" />
-          </button>
-        </div>
+        <BottomNavigation />
       </div>
     </div>
   );

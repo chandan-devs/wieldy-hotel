@@ -9,15 +9,16 @@ import {
 import "../styles/UnlockRoom.css";
 import BottomNavigation from "../components/BottomNavigation";
 import lockIcon from "../assets/unlock.png";
-import Loading from "../screens/Loading";
+import UnlockingPreloader from "../components/UnlockingPreloader";
 
 const UnlockRoom = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [reservationData, setReservationData] = useState(null);
   const [buttonText, setButtonText] = useState("Click here to Unlock Now");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isUnlockingPreloader, setIsUnlockingPreloader] = useState(false);
+  const [isDoorKeypad, setIsDoorKeypad] = useState(true);
   const navigate = useNavigate();
-  const { reservationId, roomId } = useParams();
+  const { reservationId, roomName } = useParams();
 
   useEffect(() => {
     const fetchReservationData = async () => {
@@ -25,6 +26,7 @@ const UnlockRoom = () => {
         const response = await getHotelReservationById(reservationId);
         if (response.success) {
           setReservationData(response.data[0]);
+          setIsDoorKeypad(response.data[0].hotelDetails.isDoorKeypad);
         }
       } catch (error) {
         console.error("Error fetching reservation data:", error);
@@ -35,46 +37,40 @@ const UnlockRoom = () => {
 
   const handleUnlock = async () => {
     if (!isUnlocked && reservationData) {
-      setIsLoading(true);
+      setIsUnlockingPreloader(true);
       try {
         const token = reservationData.guestDetails.ttLockAccessToken;
-        const response = await unlockDoor(token, roomId);
+        const response = await unlockDoor(token, roomName);
 
         if (response.success) {
           setButtonText("Room has been unlocked Successfully");
           setIsUnlocked(true);
-          navigate(`/unlock-success/${roomId}`);
+          navigate(`/unlock-success/${roomName}`);
         } else {
-          navigate(`/unlock-failed/${reservationId}/${roomId}`);
+          if (!isDoorKeypad) {
+            navigate(
+              `/unlock-failed-help-support/${reservationId}/${roomName}`
+            );
+          } else {
+            navigate(`/unlock-failed/${reservationId}/${roomName}`);
+          }
         }
       } catch (error) {
         console.error("Error unlocking door:", error);
-        setButtonText("Failed to unlock. Fetching passcode...");
-        navigate(`/unlock-failed/${reservationId}/${roomId}`);
-
-        // try {
-        //   const passcodeResponse = await getPasscode(reservationId, roomId);
-        //   if (passcodeResponse && passcodeResponse.passcode) {
-        //     setButtonText(
-        //       `Unlocking Failed. Try Passcode: ${passcodeResponse.passcode}#`
-        //     );
-        //   } else {
-        //     setButtonText(
-        //       "Failed to retrieve passcode. Please contact support."
-        //     );
-        //   }
-        // } catch (passcodeError) {
-        //   console.error("Error fetching passcode:", passcodeError);
-        //   setButtonText("Failed to retrieve passcode. Please contact support.");
-        // }
+        setButtonText("Failed to unlock. Redirecting...");
+        if (!isDoorKeypad) {
+          navigate(`/unlock-failed-help-support/${reservationId}/${roomName}`);
+        } else {
+          navigate(`/unlock-failed/${reservationId}/${roomName}`);
+        }
       } finally {
-        setIsLoading(false);
+        setIsUnlockingPreloader(false);
       }
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
+  if (isUnlockingPreloader) {
+    return <UnlockingPreloader />;
   }
 
   return (
@@ -86,7 +82,7 @@ const UnlockRoom = () => {
         <h1>Unlock Your Room</h1>
       </div>
       <div className="room-number">
-        <span>Room Number: {roomId}</span>
+        <span>Room Number: {roomName}</span>
       </div>
       <div className="unlock-room-container">
         <div className="lock-icon">
@@ -100,21 +96,6 @@ const UnlockRoom = () => {
         >
           {buttonText}
         </button>
-
-        {/* <div className="unlockRoom-bottom-navigation">
-          <button onClick={() => navigate("/dashboard")}>
-            <img src={home} alt="Home" />
-          </button>
-          <button onClick={() => navigate(`/bookingdetails/${reservationId}`)}>
-            <img src={checkIn} alt="Check In" />
-          </button>
-          <button>
-            <img src={key} alt="Key" />
-          </button>
-          <button>
-            <img src={help} alt="Help" />
-          </button>
-        </div> */}
       </div>
       <BottomNavigation />
     </div>

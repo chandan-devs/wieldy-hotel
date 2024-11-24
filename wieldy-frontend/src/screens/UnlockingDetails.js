@@ -8,7 +8,7 @@ import {
   getPasscode,
   checkIn,
 } from "../services/api";
-import Loading from "../screens/Loading";
+import UnlockingPreloader from "../components/UnlockingPreloader";
 import BottomNavigation from "../components/BottomNavigation";
 import "../styles/UnlockingDetails.css";
 import hotelImg from "../assets/hotel-checkIn-img.jpg";
@@ -16,13 +16,17 @@ import hotelImg from "../assets/hotel-checkIn-img.jpg";
 const UnlockingDetails = () => {
   const [reservationData, setReservationData] = useState(null);
   const [canUnlock, setCanUnlock] = useState(false);
+  const [redirectToHelpSupport, setRedirectToHelpSupport] = useState(false);
   const [buttonText, setButtonText] = useState("Tap to Unlock Front Door");
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [checkInMessage, setCheckInMessage] = useState("");
   const [isDoorKeypad, setIsDoorKeypad] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isUnlockingPreloader, setIsUnlockingPreloader] = useState(false);
+  // eslint-disable-next-line
   const [passcodeProvided, setPasscodeProvided] = useState(false);
+  // eslint-disable-next-line
   const [canUnlockRooms, setCanUnlockRooms] = useState(false);
+  // eslint-disable-next-line
   const [frontDoorUnlocked, setFrontDoorUnlocked] = useState(false);
   const { reservationId } = useParams();
   const navigate = useNavigate();
@@ -49,6 +53,7 @@ const UnlockingDetails = () => {
     };
     fetchReservationData();
     setCanUnlockRooms(false);
+    // eslint-disable-next-line
   }, [reservationId]);
 
   const checkUnlockingTime = (data) => {
@@ -91,19 +96,86 @@ const UnlockingDetails = () => {
     }
   };
 
+  // const handleUnlock = async () => {
+  //   console.log("Current canUnlock state:", canUnlock);
+  //   console.log("Current isUnlocked state:", isUnlocked);
+  //   if (canUnlock && !isUnlocked) {
+  //     setIsUnlockingPreloader(true);
+  //     try {
+  //       const token = reservationData.guestDetails.ttLockAccessToken;
+  //       const room = "2025";
+  //       const response = await unlockDoor(token, room);
+
+  //       if (response.success) {
+  //         setButtonText("Front Door Has Been Unlocked Successfully!");
+
+  //         setIsUnlocked(true);
+  //         setFrontDoorUnlocked(true);
+  //         setCanUnlockRooms(true);
+  //       } else {
+  //         throw new Error("Unlock failed");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error unlocking door:", error);
+  //       setButtonText("Failed to unlock. Fetching passcode...");
+
+  //       if (!isDoorKeypad) {
+  //         navigate(`/unlock-failed-help-support/${reservationId}`);
+  //       } else {
+  //         setButtonText("Failed to unlock. Fetching passcode...");
+
+  //         try {
+  //           const passcodeResponse = await getPasscode(reservationId, "2024");
+  //           if (passcodeResponse && passcodeResponse.passcode) {
+  //             const passcodeMessage = `Unlocking Failed. Try Passcode: ${passcodeResponse.passcode}#`;
+  //             setButtonText(passcodeMessage);
+
+  //             setPasscodeProvided(true);
+  //             setCanUnlockRooms(true);
+  //           } else {
+  //             throw new Error("Failed to get passcode");
+  //           }
+  //         } catch (passcodeError) {
+  //           console.error("Error fetching passcode:", passcodeError);
+  //           setButtonText("Failed to get passcode. Please try again.");
+  //         }
+  //       }
+  //     } finally {
+  //       setIsUnlockingPreloader(false);
+  //     }
+  //   } else if (!canUnlock) {
+  //     console.log("Cannot unlock yet");
+  //   } else {
+  //     console.log("Door is already unlocked");
+  //   }
+  // };
+
   const handleUnlock = async () => {
+    if (redirectToHelpSupport) {
+      navigate("/help-support");
+      return;
+    }
+
     console.log("Current canUnlock state:", canUnlock);
     console.log("Current isUnlocked state:", isUnlocked);
     if (canUnlock && !isUnlocked) {
-      setIsLoading(true);
+      setIsUnlockingPreloader(true);
       try {
         const token = reservationData.guestDetails.ttLockAccessToken;
         const room = "2024";
-        const response = await unlockDoor(token, room);
+
+        const unlockPromise = unlockDoor(token, room);
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error("Unlock operation timed out")),
+            5000
+          )
+        );
+
+        const response = await Promise.race([unlockPromise, timeoutPromise]);
 
         if (response.success) {
           setButtonText("Front Door Has Been Unlocked Successfully!");
-
           setIsUnlocked(true);
           setFrontDoorUnlocked(true);
           setCanUnlockRooms(true);
@@ -112,10 +184,10 @@ const UnlockingDetails = () => {
         }
       } catch (error) {
         console.error("Error unlocking door:", error);
-        setButtonText("Failed to unlock. Fetching passcode...");
 
         if (!isDoorKeypad) {
-          navigate(`/unlock-failed-help-support/${reservationId}`);
+          setButtonText("Unlocking Failed, Connect To Support Team.");
+          setRedirectToHelpSupport(true);
         } else {
           setButtonText("Failed to unlock. Fetching passcode...");
 
@@ -124,7 +196,6 @@ const UnlockingDetails = () => {
             if (passcodeResponse && passcodeResponse.passcode) {
               const passcodeMessage = `Unlocking Failed. Try Passcode: ${passcodeResponse.passcode}#`;
               setButtonText(passcodeMessage);
-
               setPasscodeProvided(true);
               setCanUnlockRooms(true);
             } else {
@@ -136,7 +207,7 @@ const UnlockingDetails = () => {
           }
         }
       } finally {
-        setIsLoading(false);
+        setIsUnlockingPreloader(false);
       }
     } else if (!canUnlock) {
       console.log("Cannot unlock yet");
@@ -145,7 +216,7 @@ const UnlockingDetails = () => {
     }
   };
 
-  const handleRoomClick = async (roomId) => {
+  const handleRoomClick = async (roomName) => {
     if (!reservationData) return;
 
     const { bookingDetails, hotelDetails } = reservationData;
@@ -163,14 +234,14 @@ const UnlockingDetails = () => {
       propertyID: hotelDetails.propertyId,
     };
 
-    setIsLoading(true);
+    setIsUnlockingPreloader(true);
 
     try {
       const token = localStorage.getItem("token");
       const response = await checkIn(payload, token);
 
       if (response.success) {
-        navigate(`/unlock-room/${reservationId}/${roomId}`);
+        navigate(`/unlock-room/${reservationId}/${roomName}`);
       } else {
         if (
           response.message === "Your Payment is due, Kindly pay at Reception."
@@ -181,7 +252,7 @@ const UnlockingDetails = () => {
           "Room check-in issue. Ensure previous checkouts are complete."
         ) {
           setCheckInMessage(response.message);
-          navigate(`/unlock-room/${reservationId}/${roomId}`);
+          navigate(`/unlock-room/${reservationId}/${roomName}`);
         } else {
           setCheckInMessage(
             response.message ||
@@ -193,12 +264,12 @@ const UnlockingDetails = () => {
       console.error("Check-in error:", error);
       setCheckInMessage("An error occurred during check-in. Please try again.");
     } finally {
-      setIsLoading(false);
+      setIsUnlockingPreloader(false);
     }
   };
 
-  if (!reservationData || isLoading) {
-    return <Loading />;
+  if (!reservationData || isUnlockingPreloader) {
+    return <UnlockingPreloader />;
   }
 
   const { hotelDetails, bookingDetails } = reservationData;
@@ -213,6 +284,7 @@ const UnlockingDetails = () => {
           alt={hotelDetails.propertyName}
           className="hotel-image"
         />
+        <div className="hotel-overlay"></div>
         <div className="hotel-name">{hotelDetails.propertyName}</div>
       </div>
 
@@ -237,15 +309,15 @@ const UnlockingDetails = () => {
         <h3>Room List:</h3>
         {bookingDetails.rooms.map((room) => (
           <button
-            key={room.roomId}
+            key={room.roomName}
             className="room-item"
-            onClick={() => handleRoomClick(room.roomId)}
+            onClick={() => handleRoomClick(room.roomName)}
 
             // className={`room-item ${canUnlockRooms ? "" : "disabled"}`}
-            // onClick={() => handleRoomClick(room.roomId)}
+            // onClick={() => handleRoomClick(room.roomName)}
             // disabled={!canUnlockRooms}
           >
-            <span className="room-item-text">Room Number: {room.roomId}</span>
+            <span className="room-item-text">Room Number: {room.roomName}</span>
             <span className="arrow">
               <ChevronRight />
             </span>

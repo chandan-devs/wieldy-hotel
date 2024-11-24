@@ -5,12 +5,13 @@ import checkIn from "../assets/navIcons/checkIn.png";
 import key from "../assets/navIcons/key.png";
 import help from "../assets/navIcons/help.png";
 import "../styles/BottomNavigation.css";
-import Loading from "../screens/Loading";
+import Loading from "./Loading";
 import { getHotelReservations } from "../services/api";
 
 const BottomNavigation = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [reservationData, setReservationData] = useState(null);
+  const [showMessage, setShowMessage] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,27 +31,25 @@ const BottomNavigation = () => {
     }
   };
 
-  const handleBookingDetails = () => {
+  const handleNavigation = (path) => {
     if (
       reservationData &&
       reservationData.data &&
       reservationData.data.length > 0
     ) {
-      const guestId = reservationData.data[0].bookingDetails._id;
-      navigate(`/bookingdetails/${guestId}`);
-    } else {
-      console.error("No reservation data available");
-    }
-  };
-
-  const handleUnlockingDetails = () => {
-    if (
-      reservationData &&
-      reservationData.data &&
-      reservationData.data.length > 0
-    ) {
+      const isPreCheckin = reservationData.data[0].isPreCheckin;
       const reservationId = reservationData.data[0].bookingDetails._id;
-      navigate(`/unlocking-details/${reservationId}`);
+
+      if (isPreCheckin) {
+        if (path === "bookingdetails") {
+          navigate(`/bookingdetails/${reservationId}`);
+        } else if (path === "unlocking-details") {
+          navigate(`/unlocking-details/${reservationId}`);
+        }
+      } else {
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 3000);
+      }
     } else {
       console.error("No reservation data available");
     }
@@ -71,36 +70,43 @@ const BottomNavigation = () => {
   }
 
   return (
-    <div className="bottom-navigation">
-      <button
-        className={isActive("/dashboard") ? "active" : ""}
-        onClick={() => navigate("/dashboard")}
-      >
-        <img src={home} alt="Home" />
-        <div className="active-line"></div>
-      </button>
-      <button
-        className={isActive("/bookingdetails") ? "active" : ""}
-        onClick={handleBookingDetails}
-      >
-        <img src={checkIn} alt="Check In" />
-        <div className="active-line"></div>
-      </button>
-      <button
-        className={isActive("/unlocking-details") ? "active" : ""}
-        onClick={handleUnlockingDetails}
-      >
-        <img src={key} alt="Key" />
-        <div className="active-line"></div>
-      </button>
-      <button
-        className={isActive("/help-and-support") ? "active" : ""}
-        onClick={() => navigate("/help-and-support")}
-      >
-        <img src={help} alt="Help" />
-        <div className="active-line"></div>
-      </button>
-    </div>
+    <>
+      <div className="bottom-navigation">
+        <button
+          className={isActive("/dashboard") ? "active" : ""}
+          onClick={() => navigate("/dashboard")}
+        >
+          <img src={home} alt="Home" />
+          <div className="active-line"></div>
+        </button>
+        <button
+          className={isActive("/bookingdetails") ? "active" : ""}
+          onClick={() => handleNavigation("bookingdetails")}
+        >
+          <img src={checkIn} alt="Check In" />
+          <div className="active-line"></div>
+        </button>
+        <button
+          className={isActive("/unlocking-details") ? "active" : ""}
+          onClick={() => handleNavigation("unlocking-details")}
+        >
+          <img src={key} alt="Key" />
+          <div className="active-line"></div>
+        </button>
+        <button
+          className={isActive("/help-support") ? "active" : ""}
+          onClick={() => navigate("/help-support")}
+        >
+          <img src={help} alt="Help" />
+          <div className="active-line"></div>
+        </button>
+      </div>
+      {showMessage && (
+        <div className="gd-service-message">
+          Please Complete Proceed to Pre Check-In
+        </div>
+      )}
+    </>
   );
 };
 

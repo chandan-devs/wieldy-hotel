@@ -43,10 +43,10 @@ const PreCheckin = () => {
     formData.append("legalName", legalName);
     formData.append("dateOfBirth", dateOfBirth.toISOString().split("T")[0]);
     formData.append("estimatedArrivalTime", estimatedArrivalTime.toISOString());
-
     try {
+      // eslint-disable-next-line
       const response = await uploadPreCheckInData(formData);
-      console.log("Pre-check-in successful", response);
+      // console.log("Pre-check-in successful", response);
       navigate("/pre-check-in-success");
     } catch (error) {
       console.error("Pre-check-in failed:", error);
@@ -77,7 +77,7 @@ const PreCheckin = () => {
       </div>
 
       <main className="pre-checkin__main-content">
-        <h2 className="pre-checkin__subtitle">Verify your identity</h2>
+        <h2 className="pre-checkin__subtitle">Verify your details</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="pre-checkin__form-group">
@@ -176,9 +176,14 @@ const PreCheckin = () => {
                 information is true and accurate.
               </span>
             </label>
-            <a href="#" className="pre-checkin__accept-link">
+            <Link
+              to="/terms-and-conditions"
+              className="pre-checkin__accept-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               I accept
-            </a>
+            </Link>
             {errors.acknowledgment && (
               <p className="pre-checkin__error-message">
                 {errors.acknowledgment}
